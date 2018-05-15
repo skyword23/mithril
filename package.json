@@ -1,13 +1,13 @@
 {
   "name": "demo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Data table with navigation buttons",
   "main": "index.js",
   "scripts": {
     "start": "webpack index.js --output bin/app.js -d --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "Harish Arya",
   "license": "ISC",
   "dependencies": {
     "mithril": "^1.1.6"
