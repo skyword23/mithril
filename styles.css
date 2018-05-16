@@ -1,0 +1,40 @@
+
+
+table {
+
+    border-style: solid; border-width: 1px;
+    border-collapse: collapse;
+    width: 98%;
+}
+
+thead {
+
+    font-weight: bold;
+    background-color: lightgray;
+}
+
+.center {
+    margin: 20px;
+    text-align : center;
+}
+
+input {
+    width : 100px;
+    type: "number";
+    min: 1;
+}
+
+.mr {
+    margin-left : 20px;
+    margin-right: 10px;
+}
+
+.mrl {
+    margin-left : 20px;
+}
+
+.btn {
+    background-color: rgb(110, 143, 214);
+    color: white;
+}
+

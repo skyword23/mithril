@@ -8,7 +8,7 @@ class Data  {
         this.data = [];
         // generate dummy data for displaying
         
-        var max = 1000;
+        var max = 100;
         for(let k=1; k <= max; k++) {
             this.data.push({ind : k, locn: 1700 + k, ordid: "ORD_" + k, ksn: 1500 + k, sku : 10000});
         }
@@ -46,38 +46,43 @@ function firstPage() {
 // handler for 'page size' value changed
 
 function pageSizeChanged () {
-    app.pageSize = Number(document.getElementById('pagesize').value);
+    app.pageSize = Math.min(app.max, Number(document.getElementById('pagesize').value));
+    app.pageSize = Math.max(1, app.pageSize);
+    document.getElementById('pagesize').value = app.pageSize;
 }
 
 // handler for 'start' value changed
 
 function startChanged() {
-    app.start = Number(document.getElementById('start').value);
+    app.start = Math.min(app.max, Number(document.getElementById('start').value));
+    app.start = Math.max(1, app.start);
+    document.getElementById('start').value = app.start;
 }
 
 //  create a row from a given data point
 
 function tableRow(v) {
-    return m('tr', m('td', v.ind), m('td', v.locn), m('td', v.ordid), m('td', v.ksn), m('td', v.sku));
+    return m('tr', m('td.ba', v.ind), m('td.ba', v.locn), m('td.ba', v.ordid), m('td.ba', v.ksn), m('td.ba', v.sku));
 }
 
 var tableHeader = m('thead', m('tr', 
-                        m('td', ''), 
-                        m('td', 'Locn_Nbr'), 
-                        m('td', 'Online_Ord_Id'), 
-                        m('td', 'KSN_Id'), 
-                        m('td', 'SKU_Pre_Type_Cd')));
+                        m('td.ba', ''), 
+                        m('td.ba', 'Locn_Nbr'), 
+                        m('td.ba', 'Online_Ord_Id'), 
+                        m('td.ba', 'KSN_Id'), 
+                        m('td.ba', 'SKU_Prc_Type_Cd')));
 
-var upperControls = m('ww', 
-        m('button', {onclick: prevRow}, "<"),
-        m('button', {onclick: prevPage}, "<<"),
-        m('button', {onclick: firstPage}, "<<<"),
-        m('strong', 'Showing'), m('input', {id : 'pagesize', value: '10', onchange:pageSizeChanged}, '10'), 
-        m('strong', 'rows out of'), m('input', {value: data.data.length}, ''),
-        m('strong', 'starting at row'), m('input', {id : 'start', value: 1, onchange:startChanged}, ''),
-        m('button', {onclick: nextRow}, ">"),
-        m('button', {onclick: nextPage}, ">>"),
-        m('button', {onclick: lastPage}, '>>>')
+var upperControls = m('div.center', 
+        m('button.br3.br--left.btn', {onclick: firstPage}, "|<"),
+        m('button.br1.btn', {onclick: prevPage}, "<<"),
+        m('button.br1.btn', {onclick: prevRow}, "<"),
+        m('span.mr', 'Showing'), m('input', {id : 'pagesize', type:"number", value: '10', onchange:pageSizeChanged}, '10'), 
+        m('span.mr', 'rows out of'), m('input', {readonly : true, value: data.data.length}, ''),
+        m('span.mr', 'starting at row'), 
+        m('span', m('input', {id : 'start', type: "number", value: 1, onchange:startChanged}, '')),
+        m('button.btn.mrl', {onclick: nextRow}, ">"),
+        m('button.btn', {onclick: nextPage}, ">>"),
+        m('button.br3.br--right.btn', {onclick: lastPage}, '>|')
     );
 
 var app = {
@@ -87,7 +92,7 @@ var app = {
     max : data.data.length,
 
     view: function () {
-        return m('main', upperControls , m('table', tableHeader, this.getViewData().map(tableRow)));
+        return m('main', upperControls , m('table.ba.center', tableHeader, this.getViewData().map(tableRow)));
     },
 
     // update control value
