@@ -59,8 +59,8 @@ function startChanged() {
 
 // main app code
 
-function tableRow(v) {
 var app = {
+    
     start : 1,
     pageSize : 10,
     max : data.data.length,
