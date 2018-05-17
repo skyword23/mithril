@@ -8,9 +8,10 @@ class Data  {
         this.data = [];
         // generate dummy data for displaying
         
-        var max = 100;
+        var max = 1000000;
         for(let k=1; k <= max; k++) {
-            this.data.push({ind : k, locn: 1700 + k, ordid: "ORD_" + k, ksn: 1500 + k, sku : 10000});
+            var locn = Math.floor((Math.random() * 1000) + 1);
+            this.data.push({ind : k, locn: locn, ordid: "ORD_" + k, ksn: 1500 + k, sku : 0});
         }
     }
 };
@@ -65,24 +66,24 @@ function tableRow(v) {
     return m('tr', m('td.ba', v.ind), m('td.ba', v.locn), m('td.ba', v.ordid), m('td.ba', v.ksn), m('td.ba', v.sku));
 }
 
-var tableHeader = m('thead', m('tr', 
-                        m('td.ba', ''), 
+var tableHeader = m('thead.bg-moon-gray', m('tr', 
+                        m('td', ''), 
                         m('td.ba', 'Locn_Nbr'), 
                         m('td.ba', 'Online_Ord_Id'), 
                         m('td.ba', 'KSN_Id'), 
                         m('td.ba', 'SKU_Prc_Type_Cd')));
 
-var upperControls = m('div.center', 
-        m('button.br3.br--left.btn', {onclick: firstPage}, "|<"),
-        m('button.br1.btn', {onclick: prevPage}, "<<"),
-        m('button.br1.btn', {onclick: prevRow}, "<"),
-        m('span.mr', 'Showing'), m('input', {id : 'pagesize', type:"number", value: '10', onchange:pageSizeChanged}, '10'), 
-        m('span.mr', 'rows out of'), m('input', {readonly : true, value: data.data.length}, ''),
-        m('span.mr', 'starting at row'), 
-        m('span', m('input', {id : 'start', type: "number", value: 1, onchange:startChanged}, '')),
-        m('button.btn.mrl', {onclick: nextRow}, ">"),
-        m('button.btn', {onclick: nextPage}, ">>"),
-        m('button.br3.br--right.btn', {onclick: lastPage}, '>|')
+var upperControls = m('div.tc.pt2.pb4', 
+        m('button.br3.br--left.bg-blue.white', {onclick: firstPage}, "|<"),
+        m('button.br1.bg-blue.white', {onclick: prevPage}, "<<"),
+        m('button.br1.bg-blue.white', {onclick: prevRow}, "<"),
+        m('span.pl4.pr2', 'Showing'), m('input.w3', {id : 'pagesize', type:"number", value: '10', onchange:pageSizeChanged}, '10'), 
+        m('span.pl4.pr2', 'rows out of'), m('input.w3', {readonly : true, value: data.data.length}, ''),
+        m('span.pl4.pr2', 'starting at row'), 
+        m('span.pr4', m('input.w3', {id : 'start', type: "number", value: 1, onchange:startChanged}, '')),
+        m('button.br1.bg-blue.white', {onclick: nextRow}, ">"),
+        m('button.br1.bg-blue.white', {onclick: nextPage}, ">>"),
+        m('button.br3.br--right.bg-blue.white', {onclick: lastPage}, '>|')
     );
 
 var app = {
@@ -92,7 +93,7 @@ var app = {
     max : data.data.length,
 
     view: function () {
-        return m('main', upperControls , m('table.ba.center', tableHeader, this.getViewData().map(tableRow)));
+        return m('main', upperControls , m('table.ba.collapse.center', {width:"98%"}, tableHeader, this.getViewData().map(tableRow)));
     },
 
     // update control value
