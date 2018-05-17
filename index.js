@@ -25,15 +25,12 @@ var data = new Data();
 function nextRow(){
     app.nextRow();
 }
-
 function nextPage(){
     app.nextPage();
 }
-
 function lastPage(){
     app.lastPage();
 }
-
 function prevRow() {
     app.prevRow();
 }
@@ -60,40 +57,52 @@ function startChanged() {
     document.getElementById('start').value = app.start;
 }
 
-//  create a row from a given data point
+// main app code
 
 function tableRow(v) {
-    return m('tr', m('td.ba', v.ind), m('td.ba', v.locn), m('td.ba', v.ordid), m('td.ba', v.ksn), m('td.ba', v.sku));
-}
-
-var tableHeader = m('thead.bg-moon-gray', m('tr', 
-                        m('td', ''), 
-                        m('td.ba', 'Locn_Nbr'), 
-                        m('td.ba', 'Online_Ord_Id'), 
-                        m('td.ba', 'KSN_Id'), 
-                        m('td.ba', 'SKU_Prc_Type_Cd')));
-
-var upperControls = m('div.tc.pt2.pb4', 
-        m('button.br3.br--left.bg-blue.white', {onclick: firstPage}, "|<"),
-        m('button.br1.bg-blue.white', {onclick: prevPage}, "<<"),
-        m('button.br1.bg-blue.white', {onclick: prevRow}, "<"),
-        m('span.pl4.pr2', 'Showing'), m('input.w3', {id : 'pagesize', type:"number", value: '10', onchange:pageSizeChanged}, '10'), 
-        m('span.pl4.pr2', 'rows out of'), m('input.w3', {readonly : true, value: data.data.length}, ''),
-        m('span.pl4.pr2', 'starting at row'), 
-        m('span.pr4', m('input.w3', {id : 'start', type: "number", value: 1, onchange:startChanged}, '')),
-        m('button.br1.bg-blue.white', {onclick: nextRow}, ">"),
-        m('button.br1.bg-blue.white', {onclick: nextPage}, ">>"),
-        m('button.br3.br--right.bg-blue.white', {onclick: lastPage}, '>|')
-    );
-
 var app = {
-    
     start : 1,
     pageSize : 10,
     max : data.data.length,
 
+    tableHeader: m('thead.bg-moon-gray', m('tr', 
+                        m('td', ''), 
+                        m('td.ba', 'Locn_Nbr'), 
+                        m('td.ba', 'Online_Ord_Id'), 
+                        m('td.ba', 'KSN_Id'), 
+                        m('td.ba', 'SKU_Prc_Type_Cd'))
+                    ),
+
+    upperControls:  m('div.tc.pt2.pb4', 
+        m('button.br3.br--left.bg-blue.white', {onclick: firstPage}, "|<"),
+        m('button.br1.bg-blue.white', {onclick: prevPage}, "<<"),
+        m('button.br1.bg-blue.white', {onclick: prevRow}, "<"),
+        m('span.pl4.pr2', 'Showing'), m('input.w3', {id : 'pagesize', type:"number", value: '10', onchange:pageSizeChanged}), 
+        m('span.pl4.pr2', 'rows out of'), m('input.w3', {readonly : true, value: data.data.length}),
+        m('span.pl4.pr2', 'starting at row'), 
+        m('span.pr4', m('input.w3', {id : 'start', type: "number", value: 1, onchange:startChanged})),
+        m('button.br1.bg-blue.white', {onclick: nextRow}, ">"),
+        m('button.br1.bg-blue.white', {onclick: nextPage}, ">>"),
+        m('button.br3.br--right.bg-blue.white', {onclick: lastPage}, '>|')
+    ),
+
+    tableRow : function(v) {
+        return m('tr', 
+                    m('td.ba', v.ind), m('td.ba', v.locn), m('td.ba', v.ordid), 
+                    m('td.ba', v.ksn), m('td.ba', v.sku)
+                );
+    },
+
+    // return the app view
+
     view: function () {
-        return m('main', upperControls , m('table.ba.collapse.center', {width:"98%"}, tableHeader, this.getViewData().map(tableRow)));
+        return m('div', 
+                    this.upperControls , 
+                    m('table.ba.collapse.center', {width:"98%"}, 
+                        this.tableHeader, 
+                        this.getViewData().map(this.tableRow)
+                    )
+                );
     },
 
     // update control value
@@ -125,7 +134,6 @@ var app = {
     },
     
     nextPage: function(){
-
         this.start += this.pageSize;
         if (this.start > this.max){
             this.start -= this.pageSize;
@@ -134,13 +142,10 @@ var app = {
     },
 
     prevPage: function() {
-        this.start -= this.pageSize;
-        if (this.start < 1){
-            this.start += this.pageSize;
-        }
+        this.start = Math.max(this.start - this.pageSize, 1);
         this.setStart();
     },
-    
+        
     lastPage: function() {
         this.start = Math.max(this.max - this.pageSize + 1, 1);
         this.setStart();
